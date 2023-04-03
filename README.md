@@ -16,5 +16,7 @@
       <li><code>$print</code>: prints the list of product URLs and target prices</li>
       <li><code>$test &lt;arg&gt;</code>: sends a test message to the Discord channel</li>
     </ul>
-    <h2>how it works</h2>
+    <h2>How it works</h2>
     <p>Once an hour, It'll check for prices and ping any channel named "product-alerts" if the price is less than the threshold you set</p>
+    <h2>Future plans</h2>
+    <p>I wrote this bot because i felt the need to learn python, plus i needed something to keep track of prices automatically. I may consider switching to writing thew bot in typescript, as it seem like a far superior language to write this in, plus I want to learn typescript as well. Hosted on heroku free tier (might switch ??). if you have any questions feel free to DM me on discord DNWMN#8684 </p>
