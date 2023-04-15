@@ -45,15 +45,13 @@ urls = []
 prices = []
 
 headers = {
-    "User-Agent": ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'),
+    "User-Agent": ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'),
     "Accept-Language" : 'en-US, en;q=0.5'           
 }
 
 # client = discord.Client(intents = intents)
 
 bot = commands.Bot(command_prefix="$", intents=intents)
-
-channel = bot.get_channel(1091539048746713089)
 
 @bot.event
 async def on_ready():
@@ -73,9 +71,28 @@ async def add(ctx, URL, targetPrice):
     # get url from user and price 
 
 @bot.command()
-async def print(ctx):
+async def watchlist(ctx):
     for x in range(len(urls)):
-        await ctx.send(f"{urls[x]} ${prices[x]}")
+        page = requests.get(urls[x], headers = headers)
+            
+        soup = BeautifulSoup(page.content, 'html.parser')
+            
+        itemTitle = soup.find(id='productTitle').get_text()
+            
+        itemPrice = soup.find(attrs={'class' : 'a-offscreen'}).text.strip()        
+        await ctx.send(f"{x+1}) {itemTitle.strip()} is currently: {itemPrice}, target price: ${prices[x]}")
+
+@bot.command()
+async def clear(ctx, numMessages):
+    await ctx.send(f"Are you sure you want to delete {numMessages} messages?")
+    
+    def check(message):
+        return message.author == ctx.author and message.channel == ctx.channel and str(message).lower == "yes"
+    
+    message = await bot.wait_for('message', check = check)
+    if message.content.lower() == "yes":
+        for x in numMessages:
+            await ctx.delete_message()
 
 
 class MyCog(commands.Cog):
